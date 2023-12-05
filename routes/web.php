@@ -72,7 +72,7 @@ Route::get('/clear-cache',function ()
 
 Route::group(['middleware' => ['XssSanitizer']], function ()
 {
-    Route::get('/',[WebsiteController::class,'index']);
+    Route::get('/',[WebsiteController::class,'index'])->name('/');
     Route::any('/show-doctors',[WebsiteController::class,'doctor']);
     Route::get('/doctor-profile/{id}/{name}',[WebsiteController::class,'doctor_profile']);
     Route::any('/all-pharmacies',[WebsiteController::class,'pharmacy']);
@@ -296,6 +296,12 @@ Route::group(['middleware' => ['XssSanitizer']], function ()
     });
   /******* HealthCare PANEL */
   Route::get('/health/care/member/{name}',[healthCareController::class,'healthCareLogin'])->name('HealthCare_Login');
+  Route::any('Health/Member_login',[healthCareController::class,'healthCareMemberLogin'])->name('HealthMemberlogin');
+  Route::get('/Verify/users',[healthCareController::class,'VerifyUsers'])->name('Verify.users');
+  Route::post('/Verify/users/{id}',[healthCareController::class,'processApproval'])->name('user.processApproval');
+  Route::resource('healdCare/Provider',healthCareController::class)->except([
+    'show'
+]);
 
     /******* DOCTOR PANEL */
     Route::get('/doctor/doctor_login',[App\Http\Controllers\Doctor\DoctorController::class,'doctorLogin'])->name('doctor_login');

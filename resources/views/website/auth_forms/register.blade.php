@@ -30,7 +30,7 @@
                 </div>
                 <div data-attr="Health_Member" class="signupDiv sabir w-1/3 cursor-pointer py-1 ml-2 border border-[#D8D8D8] {{ $active == 'Health_Member' ? 'active' : '' }}">
                         <input {{ $active == 'Health_Member' ? 'checked' : '' }} id="bordered-radio-3" type="radio" value="Health_Member" name="signup_title" class="border-[#D8D8D8] cursor-pointer signup_title ml-2 text-blue-600">
-                        <label for="bordered-radio-3" class="text-sm font-medium text-[#666666]">{{ __('HealthCare') }}</label>
+                    <label for="bordered-radio-3" class="text-sm font-medium text-[#666666]">{{ __('HealthCare Provideru') }}</label>
                 </div>
             </div>
             <div class="tab-content contentDisplay" id="tabs-tabContent">

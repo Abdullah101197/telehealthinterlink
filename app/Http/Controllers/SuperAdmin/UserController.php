@@ -141,7 +141,7 @@ class UserController extends Controller
             (new CustomController)->deleteFile($user->image);
             $data['image'] = (new CustomController)->imageUpload($request->image);
         }
-        $data['verify'] = 1;
+        $data['verify'] = 0;
         $user->update($data);
         return redirect('patient')->withStatus(__('patient updated successfully..!!'));
     }

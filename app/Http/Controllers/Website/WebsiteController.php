@@ -118,7 +118,7 @@ class WebsiteController extends Controller
             'phone' => $request['phone'],
             'phone_code' => $request['phone_code'],
             'image' => 'defaultUser.png',
-            'status' => 1,
+            'status' => 0,
             'dob' => $request['dob'],
             'gender' => $request['gender'],
             'resume' => $wallpaper_image_path,
