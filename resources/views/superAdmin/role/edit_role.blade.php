@@ -22,7 +22,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label class="col-form-label">{{__('Name')}}</label>
-                        <input type="text" value="{{ $role->name }}" disabled name="name" class="form-control @error('name') is-invalid @enderror">
+                        <input type="text" value="{{ $role->name }}" disabled  name="name" class="form-control @error('name') is-invalid @enderror">
                         @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -32,7 +32,7 @@
 
                     <div class="form-group">
                         <label class="col-form-label">{{__('Permissions')}}</label>
-                        <select name="permissions[]" class="select2 @error('permissions') is-invalid @enderror" multiple="multiple" disabled>
+                        <select name="permissions[]" class="select2 @error('permissions') is-invalid @enderror" multiple="multiple">
                             @foreach ($permissions as $permission)
                                 <option value="{{ $permission->id }}" {{ $role->permissions->contains($permission->id) == 1 ? 'selected' : '' }}>{{ $permission->name }}</option>
                             @endforeach
@@ -44,7 +44,7 @@
                         @enderror
                     </div>
                     <div class="text-right">
-                        <button type="button" class="btn btn-primary">{{__('Submit')}}</button>
+                        <button type="submit" class="btn btn-primary">{{__('Submit')}}</button>
                     </div>
                 </div>
             </form>

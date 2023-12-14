@@ -1,4 +1,4 @@
-@extends('layout.mainlayout_admin',['activePage' => 'healthCare'])
+@extends('layout.mainlayout_admin',['activePage' => 'healthCareProvider'])
 
 @section('title',__('All HealthCare Provider'))
 @section('content')
@@ -17,7 +17,7 @@
                 @include('superAdmin.auth.exportButtons')
                 @can('HealthCare Provider_add')
                     <a href="#" >{{ __('Add New') }}</a>
-                    {{-- {{ url('healthCare/create') }} --}}
+                    {{-- {{ url('healthCareProvider/create') }} --}}
                 @endcan
             </div>
             <div class="card-body">
@@ -38,38 +38,41 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($healthCares as $healthCare)
+                            @foreach ($healthCareProviders as $healthCareProvider)
                                 <tr>
                                     <td>
-                                        <input type="checkbox" name="id[]" value="{{$healthCare->id}}" id="{{$healthCare->id}}" data-id="{{ $healthCare->id }}" class="sub_chk">
-                                        <label for="{{$healthCare->id}}"></label>
+                                        <input type="checkbox" name="id[]" value="{{$healthCareProvider->id}}" id="{{$healthCareProvider->id}}" data-id="{{ $healthCareProvider->id }}" class="sub_chk">
+                                        <label for="{{$healthCareProvider->id}}"></label>
                                     </td>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
-                                        <a href="{{ url('healthCare/'.$healthCare->id.'/'.Str::slug($healthCare->name).'/dashboard') }}" class="avatar avatar-sm mr-2">
-                                            <img class="avatar-img rounded-circle" src="{{ $healthCare->fullImage }}" alt="healthCare Image"></a>
-                                        <a href="{{ url('healthCare/'.$healthCare->id.'/'.Str::slug($healthCare->name).'/dashboard') }}">{{ $healthCare->name }}</a>
+                                            <img class="avatar-img rounded-circle" src="{{$healthCareProvider->image }}" alt="Image"></a>
+
+                                        {{$healthCareProvider->user->name}}
+
+
+
                                     </td>
                                     <td>
-                                        {{$healthCare->email}}
+                                        {{$healthCareProvider->user_email}}
                                     </td>
                                    
                                    
                                    
-                                    @if (Gate::check('healthCare_edit') || Gate::check('healthCare_delete'))
+                                    @if (Gate::check('healthCareProvider_edit') || Gate::check('healthCareProvider_delete'))
                                         <td>
                                             <a href="#" class="text-info">
-                                                {{-- {{ url('healthCare/'.$healthCare->id.'/'.Str::slug($healthCare->name).'/dashboard') }} --}}
+                                                {{-- {{ url('healthCareProvider/'.$healthCareProvider->id.'/'.Str::slug($healthCareProvider->name).'/dashboard') }} --}}
                                                 <i class="far fa-eye"></i>
                                             </a>
-                                            @can('healthCare_edit')
+                                            @can('healthCareProvider_edit')
                                             <a class="text-success" href="">
-                                                {{-- {{url('healthCare/'.$healthCare->id.'/edit')}} --}}
+                                                {{-- {{url('healthCareProvider/'.$healthCareProvider->id.'/edit')}} --}}
                                                 <i class="far fa-edit"></i>
                                             </a>
                                             @endcan
-                                            @can('healthCare_delete')
-                                            <a class="text-danger" href="javascript:void(0);" onclick="deleteData('healthCare',{{ $healthCare->id }})">
+                                            @can('healthCareProvider_delete')
+                                            <a class="text-danger" href="javascript:void(0);" onclick="deleteData('healthCareProvider',{{ $healthCareProvider->id }})">
                                                 <i class="far fa-trash-alt"></i>
                                             </a>
                                             @endcan
@@ -82,7 +85,7 @@
                 </div>
             </div>
             <div class="card_fotter">
-                <input type="button" value="delete selected" onclick="deleteAll('healthCare_all_delete')" class="btn btn-primary">
+                <input type="button" value="delete selected" onclick="deleteAll('healthCareProvider_all_delete')" class="btn btn-primary">
             </div>
         </div>
     </div>

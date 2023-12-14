@@ -59,6 +59,10 @@ class LoginController extends Controller
                 Auth::logout();
                 return redirect('/pathologist_login');
             }
+            else if (auth()->user()->hasRole('HealthCare_Provider')){
+                Auth::logout();
+                return redirect('/');
+            }
             else{
                 Auth::logout();
                 return redirect('/');

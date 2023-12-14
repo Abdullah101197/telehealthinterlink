@@ -70,13 +70,13 @@ class WebsiteController extends Controller
 
     public function sign_up(Request $request)
     {
-      
-     
+
+
         $request->validate(
-            [ 
+            [
                 'name' => '|required',
                 'email' => '|required|email|unique:users',
-                'dob' => 'required', 
+                'dob' => 'required',
                 'gender' => '|required',
                 // 'phone' => '|required|numeric',
                 'password' => '|required|min:6',
@@ -87,28 +87,28 @@ class WebsiteController extends Controller
             //     'dob.before' => 'Date is invalid.',
             // ]
         );
-        
-        if($request->from != 'patient'){
-             $request->validate(
-            [ 
-                 'resume'   => 'required',
-            ]
-        );
+
+        if ($request->from != 'patient') {
+            $request->validate(
+                [
+                    'resume'   => 'required',
+                ]
+            );
         }
 
         $data = $request->all();
         $verification = Setting::first()->verification;
         $verify = $verification == 1 ? 0 : 1;
         $wallpaper_image_path = null;
-        if($request->hasFile('resume')){
+        if ($request->hasFile('resume')) {
             $wallpaper_image = $request->file('resume');
-            $fileName =  time().'-'.$wallpaper_image->getClientOriginalName();
+            $fileName =  time() . '-' . $wallpaper_image->getClientOriginalName();
             $wallpaper_image->move('assets/uploads', $fileName);
-            $wallpaper_image_path = 'assets/uploads/'.$fileName;
+            $wallpaper_image_path = 'assets/uploads/' . $fileName;
         }
-        
-       
-        
+
+
+
         $user = User::create([
             'name' => $request['name'],
             'surname' => $request['surname'],
@@ -124,11 +124,11 @@ class WebsiteController extends Controller
             'resume' => $wallpaper_image_path,
             'p_name' => $request['p_name'] ?? null,
         ]);
-        
+
         if ($user->verify) {
             if ($user) {
                 $notification_template = NotificationTemplate::where('title', 'register')->first();
-                $message=$notification_template->mail_content;
+                $message = $notification_template->mail_content;
                 try {
                     $setting = Setting::first();
                     // $detail['user_name'] = $user->name;
@@ -152,17 +152,18 @@ class WebsiteController extends Controller
                     return $e->getMessage();
                 }
             }
-            if($request->from == 'Health_Member'){
-              
+            // if ($request->from == 'HealthCare_Provider') {
 
-                $healthcareMember = HealthcareMember::create([
-                    'name' => $request['name'],
-                    'email' => $request['email'],
-                    'phone_number' => $request['phone'],
-                    'date_of_birth' => Carbon::createFromFormat('d/m/Y', $request['dob'])->format('Y-m-d'),
-                ]);
-                return redirect()->route('sent-to-admin');
-            }
+            //     try {
+            //         $user = (new CustomController)->HealthCareProvider_Register($request->all());
+            //         return redirect()->route('sent-to-admin');
+
+            //     } catch (\Throwable $e) {
+            //        return $e->getMessage();
+            //     }
+
+
+            // }
             Auth::loginUsingId($user->id);
             return redirect('/');
         } else {
@@ -184,14 +185,14 @@ class WebsiteController extends Controller
             'resume'   => 'required',
             'doc_surname' => 'required'
         ]);
-        
-         if($request->hasFile('resume')){
+
+        if ($request->hasFile('resume')) {
             $wallpaper_image = $request->file('resume');
-            $fileName =  time().'-'.$wallpaper_image->getClientOriginalName();
+            $fileName =  time() . '-' . $wallpaper_image->getClientOriginalName();
             $wallpaper_image->move('assets/uploads', $fileName);
-            $wallpaper_image_path = 'assets/uploads/'.$fileName;
+            $wallpaper_image_path = 'assets/uploads/' . $fileName;
         }
-        
+
         $data['name'] = $request->doc_name;
         $data['surname'] = $request->surname ?? null;
         $data['email'] = $request->doc_email;
@@ -201,13 +202,18 @@ class WebsiteController extends Controller
         $data['gender'] = $request->doc_gender;
         $data['password'] = $request->doc_password;
         $data['resume'] = $wallpaper_image_path;
+        if ($request->healthCareMember_id != null) {
+            $data['healthCareMember_id'] = $request->healthCareMember_id;
+        } else {
+            $data['healthCareMember_id'] = null;
+        }
         $user = (new CustomController)->doctorRegister($data);
-        if($user){
+        if ($user) {
             return redirect()->route('sent-to-admin');
         }
-        return back()->with('error',"something went wrong!");
-        
-        
+        return back()->with('error', "something went wrong!");
+
+
         /*
          Auth::loginUsingId($user->id);
         if ($user->verify) {
@@ -1171,17 +1177,43 @@ class WebsiteController extends Controller
 
     public function userProfile()
     {
-        (new CustomController)->cancel_max_order();
-        $setting = Setting::first();
-        $appointments = Appointment::with(['doctor', 'hospital'])->where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get();
-        foreach ($appointments as $appointment) {
-            $appointment->isReview = Review::where('appointment_id', $appointment->id)->exists();
+
+
+        if (Auth::check()) {
+            if (auth()->user()->hasRole('super admin')) {
+
+                return redirect('/login');
+            } else if (auth()->user()->hasRole('pharmacy')) {
+
+                return redirect('/pharmacy_login');
+            } else if (auth()->user()->hasRole('doctor')) {
+
+                return redirect('/doctor/doctor_login');
+            } else if (auth()->user()->hasRole('laboratory')) {
+
+                return redirect('/pathologist_login');
+            } else if (auth()->user()->hasRole('HealthCare_Provider')) {
+
+                return redirect()->route('Health.Care.home', ['name' => Auth::user()->name]);
+            } else {
+
+
+
+
+
+                (new CustomController)->cancel_max_order();
+                $setting = Setting::first();
+                $appointments = Appointment::with(['doctor', 'hospital'])->where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get();
+                foreach ($appointments as $appointment) {
+                    $appointment->isReview = Review::where('appointment_id', $appointment->id)->exists();
+                }
+                $prescriptions = Prescription::with(['doctor', 'appointment'])->where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get();
+                $purchaseMedicines = PurchaseMedicine::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get();
+                $currency = $setting->currency_symbol;
+                $cancel_reason = $setting->cancel_reason;
+                return view('website.user.user_profile', compact('appointments', 'purchaseMedicines', 'currency', 'prescriptions', 'cancel_reason'));
+            }
         }
-        $prescriptions = Prescription::with(['doctor', 'appointment'])->where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get();
-        $purchaseMedicines = PurchaseMedicine::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get();
-        $currency = $setting->currency_symbol;
-        $cancel_reason = $setting->cancel_reason;
-        return view('website.user.user_profile', compact('appointments', 'purchaseMedicines', 'currency', 'prescriptions', 'cancel_reason'));
     }
 
     public function testReport()

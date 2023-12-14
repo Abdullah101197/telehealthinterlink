@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Country;
 use App\Models\Doctor;
+use App\Models\HealthcareMember;
 use App\Models\Offer;
 use App\Models\Setting;
 use App\Models\User;
@@ -21,18 +22,58 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+
+
+
     public function index()
     {
         abort_if(Gate::denies('patient_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        if (auth()->user()->hasRole('doctor')) {
-            $doctor = Doctor::where('user_id', auth()->user()->id)->first();
-            $users = User::doesntHave('roles')->where('doctor_id', $doctor->id)->get();
+
+        $id = auth()->user()->id;
+        $healthcareMember = HealthcareMember::where('user_id', $id)->first();
+        if ($healthcareMember) {
+            $users = $this->healthCareDoctorAssociatedUser($healthcareMember);
         } else {
-            $users = User::doesntHave('roles')->get();
+            if (auth()->user()->hasRole('doctor')) {
+                $doctor = Doctor::where('user_id', auth()->user()->id)->first();
+                $users = User::doesntHave('roles')->where('doctor_id', $doctor->id)->get();
+            } else {
+                $users = User::doesntHave('roles')->get();
+            }
         }
         return view('superAdmin.patient.patient', compact('users'));
     }
 
+    function healthCareDoctorAssociatedUser($healthcareMember)
+    {
+        $healthcareMemberId = $healthcareMember->id;
+        $doctors = Doctor::where('healthCareMember_id', $healthcareMemberId)
+            ->with('expertise')
+            ->orderBy('id', 'desc')
+            ->get();
+
+
+        $totalUser = [];
+
+        foreach ($doctors as $key => $doctor) {
+            $appointments = Appointment::where('doctor_id', $doctor->id)->get()->toArray();
+
+            if (!empty($appointments)) {
+                foreach ($appointments as $key => $appointment) {
+                    $totalUser[$key] = $appointment['user_id'];
+                }
+            }
+        }
+
+        foreach ($totalUser as $key => $userId) {
+           
+            $users = User::where('id', $userId)->doesntHave('roles')->get();
+        }
+
+        return $users;
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -78,7 +119,6 @@ class UserController extends Controller
                 ]
             );
             $data['image'] = (new CustomController)->imageUpload($request->image);
-
         } else {
             $data['image'] = 'defaultUser.png';
         }

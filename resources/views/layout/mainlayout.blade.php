@@ -36,7 +36,7 @@
         }
     </style>
 
-   
+
 </head>
 
 @if (session()->has('direction') && session()->get('direction') == 'rtl')
@@ -96,7 +96,7 @@
             $('.patientDiv').show();
             $('.healthMemberDiv').hide();
         }
-        if (radioVal == 'Health_Member') {
+        if (radioVal == 'HealthCare_Provider') {
             $('.doctorDiv').hide();
             $('.patientDiv').hide();
             $('.healthMemberDiv').show();
@@ -117,7 +117,7 @@
                 $('.patientDiv').show();
                 $('.healthMemberDiv').hide();
             }
-            if (radioVal == 'Health_Member') {
+            if (radioVal == 'HealthCare_Provider') {
                 $('.doctorDiv').hide();
                 $('.patientDiv').hide();
                 $('.healthMemberDiv').show();
@@ -172,7 +172,7 @@
             formaction = "{{ route('doctor_login') }}";
         } else if (loginType == 'patient') {
             formaction = "{{ route('patient_login') }}";
-        } else if (loginType == 'Health_Member') {
+        } else if (loginType == 'HealthCare_Provider') {
             formaction = "{{ route('HealthMemberlogin') }}";
         }
 

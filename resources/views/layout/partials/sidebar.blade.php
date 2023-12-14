@@ -41,6 +41,15 @@
                             alt="Logo" />
                     @endif
                 </a>
+            @elseif(auth()->user()->hasRole('HealthCare_Provider'))
+            <a href="{{ route('Health.Care.home', ['name' => Auth::user()->name]) }}">
+                @if (!isset($settings->logo))
+                        <img src="{{ $settings->logo }}" width="180" height="45" alt="Logo">
+                    @else
+                        <img src="{{ url('/images/upload_empty/logo_black.png') }}" width="180" height="45"
+                            alt="Logo" />
+                    @endif
+                </a>
             @endif
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
@@ -60,8 +69,8 @@
                 <a href="{{ url('/pathologist_home') }}">
                     <img src="{{ $settings->favicon }}" width="50" height="50" alt="Logo">
                 </a>
-            @elseif(auth()->user()->hasRole('Health_Member'))
-                <a href="{{ url('/health/care/member/' . auth()->user()->name) }}">
+            @elseif(auth()->user()->hasRole('HealthCare_Provider'))
+                <a href="{{ route('Health.Care.home', ['name' => Auth::user()->name]) }}">
                     <img src="{{ $settings->favicon }}" width="50" height="50" alt="Logo">
                 </a>
             @endif
@@ -77,6 +86,15 @@
                 </li>
             @endcan
             @if (auth()->user()->hasRole('super admin'))
+                <li class="{{ $activePage == 'home' ? 'active' : '' }}">
+                    <a href="{{ url('Verify/users') }}">
+                        <i class="fas fe fe-home"></i>
+                        <span>{{ __('Approve New Member') }}</span>
+                    </a>
+                </li>
+            @endif
+
+            @if (auth()->user()->hasRole('HealthCare_Provider'))
                 @can('doctor_home')
                     <li class="{{ $activePage == 'home' ? 'active' : '' }}">
                         <a href="{{ url('Verify/users') }}">
@@ -86,6 +104,18 @@
                     </li>
                 @endcan
             @endif
+            {{-- healthCare provider --}}
+            @if (auth()->user()->hasRole('HealthCare_Provider'))
+                <li class="{{ $activePage == 'home' ? 'active' : '' }}">
+                    <a href="{{ route('Health.Care.home', ['name' => Auth::user()->name]) }}">
+
+                        <i class="fas fe fe-home"></i>
+                        <span>{{ __('Dashboard') }}</span>
+                    </a>
+                </li>
+            @endif
+
+
             {{-- Doctor --}}
             @if (auth()->user()->hasRole('doctor'))
                 @can('doctor_home')

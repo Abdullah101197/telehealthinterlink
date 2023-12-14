@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Doctor;
 use App\Models\DoctorSubscription;
 use App\Models\Expertise;
+use App\Models\HealthcareMember;
 use App\Models\Hospital;
 use App\Models\Lab;
 use App\Models\LabWorkHours;
@@ -344,7 +345,7 @@ class CustomController extends Controller
         ]);
         if ($user) {
             $notification_template = NotificationTemplate::where('title', 'register')->first();
-            $message=$notification_template->mail_content;
+            $message = $notification_template->mail_content;
             try {
                 $setting = Setting::first();
                 // $detail['user_name'] = $user->name;
@@ -385,6 +386,7 @@ class CustomController extends Controller
         $data['gender'] = $data['gender'];
         $data['subscription_status'] = 1;
         $data['is_filled'] = 0;
+        
         $doctor = Doctor::create($data);
         if ($doctor->based_on == 'subscription') {
             $subscription = Subscription::where('name', 'free')->first();
@@ -415,5 +417,65 @@ class CustomController extends Controller
             WorkingHour::create($work_time);
         }
         return $user;
+    }
+
+    public function HealthCareProvider_Register($data)
+    {
+        $setting = Setting::first();
+        $verification = $setting->verification;
+        $verify = $verification == 1 ? 0 : 1;
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'verify' => $verify,
+            'phone' => $data['phone'],
+            'phone_code' => $data['phone_code'],
+            'status' => 0,
+            'image' => 'defaultUser.png',
+            'dob' => $data['dob'],
+            'gender' => $data['gender']
+        ]);
+        // if ($user) {
+        //     $notification_template = NotificationTemplate::where('title', 'register')->first();
+        //     $message=$notification_template->mail_content;
+        //     try {
+        //         $setting = Setting::first();
+        //         $config = array(
+        //             'driver'     => $setting->mail_mailer,
+        //             'host'       => $setting->mail_host,
+        //             'port'       => $setting->mail_port,
+        //             'from'       => array('address' => $setting->mail_from_address, 'name' => $setting->mail_from_name),
+        //             'encryption' => $setting->mail_encryption,
+        //             'username'   => $setting->mail_username,
+        //             'password'   => $setting->mail_password
+        //         );
+        //         Config::set('mail', $config);
+        //         Mail::to($user->email)->send(new SendMail($message, $notification_template->subject));
+        //     } catch (\Throwable $e) {
+        //         //throw $th;
+        //         return $e->getMessage();
+        //     }
+        // }
+        $user->assignRole('HealthCare_Provider');
+        $data['user_id'] = $user->id;
+        $data['user_email'] = $user->email;
+        $data['image'] = 'defaultUser.png';
+        $data['based_on'] = $setting->default_base_on;
+        $data['since'] = Carbon::now(env('timezone'))->format('Y-m-d H:i:s');
+        $data['status'] = 0;
+        $data['name'] = $user->name;
+        $data['subscription_status'] = 0;
+        $data['is_filled'] = 0;
+
+    
+        try {
+
+            $HealthCareProvider = HealthcareMember::create($data);
+
+            return $user;
+        } catch (\Throwable $e) {
+            return $e->getMessage();
+        }
     }
 }

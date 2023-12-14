@@ -3,8 +3,14 @@
 namespace App\Http\Controllers\HealthCare;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SuperAdmin\CustomController;
+use App\Models\Appointment;
+use App\Models\Doctor;
 use App\Models\HealthcareMember;
+use App\Models\Review;
+use App\Models\Setting;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Twilio\Rest\Verify;
@@ -12,21 +18,79 @@ use Twilio\Rest\Verify;
 class healthCareController extends Controller
 {
 
+
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
     public function index()
     {
-        $healthCares = HealthcareMember::get();
-        foreach ($healthCares as $health) {
-            $health->user = User::find($health->email);
+        $healthCareProviders = HealthcareMember::get();
+        foreach ($healthCareProviders as $healthcp) {
+            $healthcp->user = User::find($healthcp->user_id);
         }
-        return view('superAdmin.healthCareProvider.healthCare', compact('healthCares'));
+
+
+        return view('superAdmin.healthCareProvider.healthCare', compact('healthCareProviders'));
     }
-    function healthCareLogin()
+    function healthCare_home()
+    {
+        $this->middleware('auth');
+        $healthCareMember_id = HealthcareMember::where('user_id', auth()->user()->id)->first('id')->toArray();
+        $doctors = Doctor::where('healthCareMember_id', $healthCareMember_id['id'])->get();
+        $totalDoctor = $doctors->count();
+        $totalAppointments = [];
+        $totalUsers = [];
+
+        foreach ($doctors as $key => $doctor) {
+            $appointmentsCount = Appointment::where('doctor_id', $doctor->id)->count();
+
+            if ($appointmentsCount > 0) {
+                $totalAppointments[$doctor->id] = $appointmentsCount;
+            }
+
+            // $usersCount = User::where('doctor_id', $doctor->id)->doesntHave('roles')->count();
+
+            // if ($usersCount > 0) {
+            //     $totalUsers[$doctor->id] = $usersCount;
+            // }
+        }
+        $totalAppointment = array_sum($totalAppointments);
+        $totalUser = array_sum($totalAppointments);
+        $currency = Setting::first()->currency_symbol;
+        $id  = auth()->user()->id;
+        // $allUsers = User::where('doctor_id', $doctor->id)->doesntHave('roles')->orderBy('id', 'DESC')->get()->take(10);
+        // $totalUser = User::where('doctor_id', $doctor->id)->doesntHave('roles')->count();
+        // $totalReview = Review::where('doctor_id', $doctor->id)->count();
+
+        return view('healthcare.home', compact('totalDoctor', 'totalAppointment', 'totalUser', 'id'));
+    }
+
+    function healthCareDoctorSignup(Request $request, $id)
     {
 
-        return view('healthcare.home');
+        $Hcp_id = HealthcareMember::where('user_id', $id)->first('id')->toArray();
+        $healthcareProviderId = $Hcp_id['id'];
+        return view('healthcare.signup', compact('healthcareProviderId'));
     }
+    public function HealthCareProviderSignUp(Request $request)
+    {
 
-
+        $request->validate([
+            'name' => 'bail|required',
+            'email' => 'bail|required|email|unique:users',
+            'dob' => 'bail|required',
+            'gender' => 'bail|required',
+            'phone' => 'bail|required|digits_between:6,12',
+            'password' => 'bail|required|min:6'
+        ]);
+        try {
+            $user = (new CustomController)->HealthCareProvider_Register($request->all());
+            return redirect()->route('sent-to-admin');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 
 
 
@@ -42,18 +106,17 @@ class healthCareController extends Controller
         if (Auth::attempt($credentials)) {
 
             $user = auth()->user();
-            $healthMember = HealthcareMember::where('email', $user->email)->first();
+            $healthMember = HealthcareMember::where('user_id', $user->id)->first();
 
             if ($healthMember != null && $user->status == 1) {
-                $name = $healthMember->name;
-                return redirect()->route('HealthCare_Login', ['name' => $name]);
+                $name = $user->name;
+                return redirect()->route('Health.Care.home', ['name' => $name]);
             } else {
                 Auth::logout();
                 return redirect()->route('/')->withErrors('You are disabled by admin. Please contact admin.');
             }
         } else {
             if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
-                // The email or password is correct, but the user status may be inactive
                 return redirect()->route('/')->withErrors('Your account is inactive. Please contact admin.');
             } else {
 

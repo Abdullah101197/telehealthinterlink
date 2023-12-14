@@ -295,8 +295,11 @@ Route::group(['middleware' => ['XssSanitizer']], function ()
         Route::post('radiology_cat_all_delete',[MultiDeleteController::class,'radiology_cat_all_delete']);
     });
   /******* HealthCare PANEL */
-  Route::get('/health/care/member/{name}',[healthCareController::class,'healthCareLogin'])->name('HealthCare_Login');
-  Route::any('Health/Member_login',[healthCareController::class,'healthCareMemberLogin'])->name('HealthMemberlogin');
+  
+  Route::post('/healthCare/Provider/signup',[healthCareController::class,'HealthCareProviderSignUp'])->name('HealthCare.ProviderSignUp');
+  Route::get('health/care/signup/{id}',[healthCareController::class,'healthCareDoctorSignup']);
+  Route::get('/health/care/member/{name}',[healthCareController::class,'healthCare_home'])->name('Health.Care.home');
+  Route::any('Health/Member/login',[healthCareController::class,'healthCareMemberLogin'])->name('HealthMemberlogin');
   Route::get('/Verify/users',[healthCareController::class,'VerifyUsers'])->name('Verify.users');
   Route::post('/Verify/users/{id}',[healthCareController::class,'processApproval'])->name('user.processApproval');
   Route::resource('healdCare/Provider',healthCareController::class)->except([
