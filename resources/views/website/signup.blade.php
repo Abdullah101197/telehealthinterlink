@@ -29,9 +29,9 @@
         }
 
         /* .contentDisplay .active
-        {
-            display: block;
-        } */
+            {
+                display: block;
+            } */
     </style>
 @endsection
 
@@ -344,7 +344,8 @@
 
 
                     <div class="{{ $active == 'HealthCare_Provider' ? 'active' : 'hide' }} healthMemberDiv">
-                        <form action="{{ url('healthCare/Provider/signup') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ url('healthCare/Provider/signup') }}" method="post"
+                            enctype="multipart/form-data">
                             <input type="hidden" name="from" value="HealthCare_Provider">
                             @csrf
                             <div class="pt-3">
@@ -494,6 +495,36 @@
 
 @section('js')
     <script src="{{ url('assets/js/intlTelInput.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            // When the form is submitted
+            $('form').submit(function(e) {
+                // Prevent the default form submission
+                e.preventDefault();
+    
+                // Create a FormData object to handle the form data
+                var formData = new FormData($(this)[0]);
+    
+                // Make the AJAX request
+                $.ajax({
+                    url: $(this).attr('action'), // Form action URL
+                    type: 'POST', // Form submit method (GET, POST, PUT, etc.)
+                    data: formData, // Form data
+                    processData: false, // Prevent jQuery from automatically processing the data
+                    contentType: false, // Prevent jQuery from automatically setting the content type
+                    success: function(response) {
+                        // Handle success
+                        console.log(response);
+                    },
+                    error: function(error) {
+                        // Handle error
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
     <script>
         $(document).ready(function() {
             $('.signupDiv').click(function() {

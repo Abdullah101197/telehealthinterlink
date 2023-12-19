@@ -50,7 +50,7 @@
                     <label class="font-fira-sans text-black text-sm font-normal">{{ __('First Name') }}</label>
                     <input type="text" name="doc_name" value="{{ old('doc_name') }}"
                         class="@error('doc_name') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter First Name') }}">
+                           required placeholder="{{ __('Enter First Name') }}">
 
                     @error('doc_name')
                         <div class="invalid-feedback">
@@ -63,7 +63,7 @@
                     <label class="font-fira-sans text-black text-sm font-normal">{{ __('Surname') }}</label>
                     <input type="text" name="doc_surname" value="{{ old('doc_surname') }}"
                         class="@error('doc_surname') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter Surname') }}">
+                           required placeholder="{{ __('Enter Surname') }}">
                     @error('doc_surname')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -76,7 +76,7 @@
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Email') }}</label>
                     <input type="email" name="doc_email" value="{{ old('doc_email') }}"
                         class="@error('doc_email') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter email') }}">
+                           required placeholder="{{ __('Enter email') }}">
                     @error('doc_email')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -88,7 +88,7 @@
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Phone Number') }}</label>
                     <input type="number" name="doc_phone" value="{{ old('doc_phone') }}"
                         class="@error('doc_phone') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light doc_phone"
-                        placeholder="{{ __('Enter Phone Number') }}">
+                        minlength="8"  required placeholder="{{ __('Enter Phone Number') }}">
                     <input type="hidden" name="phone_code" value="+1">
                     @error('doc_phone')
                         <div class="invalid-feedback">
@@ -101,7 +101,7 @@
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Create Password') }}</label>
                     <input type="password" name="doc_password"
                         class="@error('doc_password') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter password') }}">
+                        minlength="8"  required placeholder="{{ __('Enter password') }}">
                     @error('doc_password')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -112,7 +112,7 @@
                     <label for="doc_dob"
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Birth Date') }}</label>
                     <div class="relative mb-3" data-te-datepicker-init data-te-input-wrapper-init>
-                        <input type="text" placeholder="dd/mm/yyyy" name="doc_dob" value="{{ old('doc_dob') }}"
+                        <input type="text"    required placeholder="dd/mm/yyyy" name="doc_dob" value="{{ old('doc_dob') }}"
                             class="@error('doc_dob') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
                             data-te-datepicker-toggle-ref data-te-datepicker-toggle-button-ref />
                     </div>
@@ -151,7 +151,7 @@
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Upload your Practising License') }}</label>
                     <input type="file" name="resume"
                         class="@error('resume') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        required placeholder="{{ __('Upload your Practising License') }}">
+                        required    required placeholder="{{ __('Upload your Practising License') }}">
                     @error('resume')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -180,7 +180,7 @@
                     <label class="font-fira-sans text-black text-sm font-normal">{{ __('First Name') }}</label>
                     <input type="text" name="name" value="{{ old('name') }}"
                         class="@error('name') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter First name') }}">
+                           required placeholder="{{ __('Enter First name') }}">
                     @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -192,7 +192,7 @@
                     <label class="font-fira-sans text-black text-sm font-normal">{{ __('Surname') }}</label>
                     <input type="text" name="surname" value="{{ old('surname') }}"
                         class="@error('surname') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter Surname') }}">
+                           required placeholder="{{ __('Enter Surname') }}">
                     @error('surname')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -205,7 +205,7 @@
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Email') }}</label>
                     <input type="text" name="email" value="{{ old('email') }}"
                         class="@error('email') is-invalid @enderror  w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter email') }}">
+                           required placeholder="{{ __('Enter email') }}">
                     @error('email')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -218,7 +218,7 @@
                     <div class="">
                         <input type="number" name="phone" value="{{ old('phone') }}"
                             class="@error('phone') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light phone"
-                            placeholder="{{ __('Enter Phone Number') }}">
+                            minlength="8"   required placeholder="{{ __('Enter Phone Number') }}">
                         <input type="hidden" name="phone_code" value="+1">
                         @error('phone')
                             <div class="invalid-feedback">
@@ -232,7 +232,7 @@
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Create Password') }}</label>
                     <input type="password" name="password"
                         class="@error('password') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter password') }}">
+                        minlength="8"  required placeholder="{{ __('Enter password') }}">
                     @error('password')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -243,7 +243,7 @@
                     <label for="dob"
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Birth Date') }}</label>
                     <div class="relative mb-3" data-te-datepicker-init data-te-input-wrapper-init>
-                        <input type="text" placeholder="dd/mm/yyyy" name="dob" value="{{ old('dob') }}"
+                        <input type="text"    required placeholder="dd/mm/yyyy" name="dob" value="{{ old('dob') }}"
                             class="@error('dob') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20"
                             data-te-datepicker-toggle-ref data-te-datepicker-toggle-button-ref />
                     </div>
@@ -301,7 +301,7 @@
                     <label class="font-fira-sans text-black text-sm font-normal">{{ __('First Name') }}</label>
                     <input type="text" name="name" value="{{ old('name') }}"
                         class="@error('name') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter Health Care Provider First Name') }}">
+                           required placeholder="{{ __('Enter Health Care Provider First Name') }}">
 
                     @error('name')
                         <div class="invalid-feedback">
@@ -314,7 +314,7 @@
                     <label class="font-fira-sans text-black text-sm font-normal">{{ __('Surname') }}</label>
                     <input type="text" name="surname" value="{{ old('surname') }}"
                         class="@error('surname') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter Surname') }}">
+                           required placeholder="{{ __('Enter Surname') }}">
                     @error('surname')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -327,7 +327,7 @@
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Preferred Name to call your provider') }}</label>
                     <input type="text" name="p_name" value="{{ old('p_name') }}"
                         class="@error('p_name') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter Preferred Name to call your provider') }}">
+                           required placeholder="{{ __('Enter Preferred Name to call your provider') }}">
 
                     @error('p_name')
                         <div class="invalid-feedback">
@@ -341,7 +341,7 @@
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Email') }}</label>
                     <input type="text" name="email" value="{{ old('email') }}"
                         class="@error('email') is-invalid @enderror  w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter email') }}">
+                           required placeholder="{{ __('Enter email') }}">
                     @error('email')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -353,7 +353,7 @@
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Phone Number') }}</label>
                     <input type="number" name="phone" value="{{ old('phone') }}"
                         class="@error('phone') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light heal_member_phone"
-                        placeholder="{{ __('Enter Phone Number') }}">
+                        minlength="8"  required placeholder="{{ __('Enter Phone Number') }}">
                     <input type="hidden" name="phone_code" value="+1">
                     @error('phone')
                         <div class="invalid-feedback">
@@ -366,7 +366,7 @@
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Create Password') }}</label>
                     <input type="password" name="password"
                         class="@error('password') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        placeholder="{{ __('Enter password') }}">
+                        minlength="8"  required placeholder="{{ __('Enter password') }}">
                     @error('password')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -377,7 +377,7 @@
                     <label for="dob"
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Birth Date') }}</label>
                     <div class="relative mb-3" data-te-datepicker-init data-te-input-wrapper-init>
-                        <input type="text" placeholder="dd/mm/yyyy" name="dob" value="{{ old('dob') }}"
+                        <input type="text"    required placeholder="dd/mm/yyyy" name="dob" value="{{ old('dob') }}"
                             class="@error('dob') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20"
                             data-te-datepicker-toggle-ref data-te-datepicker-toggle-button-ref />
                     </div>
@@ -415,7 +415,7 @@
                         class="font-fira-sans text-black text-sm font-normal">{{ __('Upload your Practising License') }}</label>
                     <input type="file" name="resume"
                         class="@error('resume') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                        required placeholder="{{ __('Upload your Practising License') }}">
+                        required    required placeholder="{{ __('Upload your Practising License') }}">
                     @error('resume')
                         <div class="invalid-feedback">
                             {{ $message }}

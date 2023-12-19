@@ -22,8 +22,9 @@ class AdminUserController extends Controller
     {
         abort_if(Gate::denies('admin_user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $users = User::with('roles')->where('id','!=',1)->whereHas('roles', function ($query) {
-            $query->whereNotIn('name',['doctor','pharmacy','laboratory']);
+            $query->whereNotIn('name',['doctor','pharmacy','laboratory','HealthCare_Provider']);
         })->get();
+       
         return view('superAdmin.admin_user.admin_user',compact('users'));
     }
 

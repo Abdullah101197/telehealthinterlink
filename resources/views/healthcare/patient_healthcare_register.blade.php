@@ -51,17 +51,17 @@
                 <h1 class="font-fira-sans leading-10 font-medium text-3xl">{{ __('Create New Account!') }}</h1>
 
                 <div class="tab-content contentDisplay" id="tabs-tabContent">
-                    <form action="{{ url('doctorRegister') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ url('signUp') }}" method="post" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="from" value="doctor">
+                        <input type="hidden" name="from" value="patient">
                         <input type="hidden" name="healthCareMember_id" value="{{$healthcareProviderId}}">
                         <div class="pt-3">
                             <label class="font-fira-sans text-black text-sm font-normal">{{ __('First Name') }}</label>
-                            <input type="text" name="doc_name" value="{{ old('doc_name') }}"
-                                class="@error('doc_name') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
+                            <input type="text" name="name" value="{{ old('name') }}"
+                                class="@error('name') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
                                   required placeholder="{{ __('Enter First Name') }}">
 
-                            @error('doc_name')
+                            @error('name')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -70,10 +70,10 @@
 
                         <div class="pt-3">
                             <label class="font-fira-sans text-black text-sm font-normal">{{ __('Surname') }}</label>
-                            <input type="text" name="doc_surname" value="{{ old('doc_surname') }}"
-                                class="@error('doc_surname') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
+                            <input type="text" name="surname" value="{{ old('surname') }}"
+                                class="@error('surname') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
                                   required placeholder="{{ __('Enter Surname') }}">
-                            @error('doc_surname')
+                            @error('surname')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -83,10 +83,10 @@
                         <div class="pt-3">
                             <label for="email"
                                 class="font-fira-sans text-black text-sm font-normal">{{ __('Email') }}</label>
-                            <input type="email" name="doc_email" value="{{ old('doc_email') }}"
-                                class="@error('doc_email') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
+                            <input type="email" name="email" value="{{ old('email') }}"
+                                class="@error('email') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
                                   required placeholder="{{ __('Enter email') }}">
-                            @error('doc_email')
+                            @error('email')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -95,11 +95,11 @@
                         <div class="pt-3">
                             <label for="phone"
                                 class="font-fira-sans text-black text-sm font-normal">{{ __('Phone Number') }}</label>
-                            <input type="number" name="doc_phone" value="{{ old('doc_phone') }}"
-                                class="@error('doc_phone') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light doc_phone"
+                            <input type="number" name="phone" value="{{ old('phone') }}"
+                                class="@error('phone') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light phone"
                                   required placeholder="{{ __('Enter Phone Number') }}">
                             <input type="hidden" name="phone_code" value="+1">
-                            @error('doc_phone')
+                            @error('phone')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -108,24 +108,24 @@
                         <div class="pt-3">
                             <label for="password"
                                 class="font-fira-sans text-black text-sm font-normal">{{ __('Create Password') }}</label>
-                            <input type="password" name="doc_password"
-                                class="@error('doc_password') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
+                            <input type="password" name="password"
+                                class="@error('password') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
                                   required placeholder="{{ __('Enter password') }}">
-                            @error('doc_password')
+                            @error('password')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
                         </div>
                         <div class="pt-3">
-                            <label for="doc_dob"
+                            <label for="dob"
                                 class="font-fira-sans text-black text-sm font-normal">{{ __('Birth Date') }}</label>
                             <div class="relative mb-3" data-te-datepicker-init data-te-input-wrapper-init>
-                                <input type="text"   required placeholder="dd/mm/yyyy" name="doc_dob" value="{{ old('doc_dob') }}"
-                                    class="@error('doc_dob') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
+                                <input type="text"   required placeholder="dd/mm/yyyy" name="dob" value="{{ old('dob') }}"
+                                    class="@error('dob') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
                                     data-te-datepicker-toggle-ref data-te-datepicker-toggle-button-ref />
                             </div>
-                            @error('doc_dob')
+                            @error('dob')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -140,33 +140,21 @@
                                     <div class="form-check form-check-inline">
                                         <input checked
                                             class="form-check-input form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-primary checked:border-primary focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-                                            type="radio" name="doc_gender" id="doc_gender_male" value="male">
+                                            type="radio" name="gender" id="gender_male" value="male">
                                         <label class="form-check-label inline-block text-gray-800  cursor-pointer"
                                             for="gender_male">{{ __('Male') }}</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input
                                             class="form-check-input form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-primary checked:border-primary focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-                                            type="radio" name="doc_gender" id="doc_gender_female" value="female">
+                                            type="radio" name="gender" id="gender_female" value="female">
                                         <label class="form-check-label inline-block text-gray-800  cursor-pointer"
                                             for="gender_female">{{ __('Female') }}</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                        <div class="pt-3">
-                            <label for="resume"
-                                class="font-fira-sans text-black text-sm font-normal">{{ __('Upload your Practising License') }}</label>
-                            <input type="file" name="resume"
-                                class="@error('resume') is-invalid @enderror w-full text-sm font-fira-sans text-gray block p-2 z-20 border border-white-light"
-                                required   required placeholder="{{ __('Upload your Practising License') }}">
-                            @error('resume')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+               
 
                         <div class="pt-3">
                             <button type="submit"

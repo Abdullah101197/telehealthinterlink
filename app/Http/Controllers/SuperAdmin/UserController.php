@@ -53,27 +53,26 @@ class UserController extends Controller
             ->with('expertise')
             ->orderBy('id', 'desc')
             ->get();
-
-
+    
         $totalUser = [];
-
-        foreach ($doctors as $key => $doctor) {
-            $appointments = Appointment::where('doctor_id', $doctor->id)->get()->toArray();
-
+    
+        foreach ($doctors as $doctor) {
+            $appointments = Appointment::where('doctor_id', $doctor->id)->pluck('user_id')->toArray();
+    
             if (!empty($appointments)) {
-                foreach ($appointments as $key => $appointment) {
-                    $totalUser[$key] = $appointment['user_id'];
-                }
+                $totalUser = array_merge($totalUser, $appointments);
             }
         }
-
-        foreach ($totalUser as $key => $userId) {
-           
-            $users = User::where('id', $userId)->doesntHave('roles')->get();
+    
+        if (!empty($totalUser)) {
+            $users = User::whereIn('id', $totalUser)->doesntHave('roles')->get();
+        } else {
+            $users = [];
         }
-
+    
         return $users;
     }
+    
     /**
      * Show the form for creating a new resource.
      *

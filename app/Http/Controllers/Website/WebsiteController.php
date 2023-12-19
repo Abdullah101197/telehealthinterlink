@@ -71,7 +71,6 @@ class WebsiteController extends Controller
     public function sign_up(Request $request)
     {
 
-
         $request->validate(
             [
                 'name' => '|required',
@@ -83,12 +82,14 @@ class WebsiteController extends Controller
                 // 'resume'   => 'required', 
                 'surname' => 'required'
             ]
+            
             // [
             //     'dob.before' => 'Date is invalid.',
             // ]
         );
-
+ 
         if ($request->from != 'patient') {
+            dd('here');
             $request->validate(
                 [
                     'resume'   => 'required',
@@ -106,9 +107,6 @@ class WebsiteController extends Controller
             $wallpaper_image->move('assets/uploads', $fileName);
             $wallpaper_image_path = 'assets/uploads/' . $fileName;
         }
-
-
-
         $user = User::create([
             'name' => $request['name'],
             'surname' => $request['surname'],
@@ -118,12 +116,23 @@ class WebsiteController extends Controller
             'phone' => $request['phone'],
             'phone_code' => $request['phone_code'],
             'image' => 'defaultUser.png',
-            'status' => 0,
+            'status' => 1,
             'dob' => $request['dob'],
             'gender' => $request['gender'],
             'resume' => $wallpaper_image_path,
             'p_name' => $request['p_name'] ?? null,
         ]);
+        if ($request->has('healthCareMember_id')) {
+
+        if ($request->healthCareMember_id != null) {
+            $user->healthCareMember_id = $request->healthCareMember_id;
+        } else {
+            $user->healthCareMember_id = null;
+        }
+        
+        $user->save();
+    }
+        
 
         if ($user->verify) {
             if ($user) {

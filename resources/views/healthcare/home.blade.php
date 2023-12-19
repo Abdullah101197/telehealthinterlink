@@ -53,39 +53,57 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-xl-4 col-sm-6 col-12">
                 @php
                     $url = env('APP_URL');
                 @endphp
                 <h3>Invite Your Doctors</h3>
-
-                <button onclick="copyLink()">Copy Invitation Link</button>
-
-                <div hidden>
-                    <input type="text" value="{{ $url }}/health/care/signup/{{ $id }}"
-                        id="InvitationLink" readonly>
+        
+                <button onclick="copyLink('doctor')">Copy Invitation Link</button>
+        
+                <div>
+                    <input type="text" value="{{ $url }}/healthCare/doctor/{{ $id }}/signup/{{ $p_name }}"
+                        id="doctorInvitationLink" readonly>
                 </div>
             </div>
-
+            <div class="col-xl-4 col-sm-6 col-12">
+                @php
+                    $url = env('APP_URL');
+                @endphp
+                <h3>Invite Your Patient</h3>
+        
+                <button onclick="copyLink('patient')">Copy Invitation Link</button>
+        
+                <div>
+                    <input type="text" value="{{ $url }}/healthCare/patient/{{ $id }}/signup/{{ $p_name }}"
+                        id="patientInvitationLink" readonly>
+                </div>
+            </div>
         </div>
+        
 
     </section>
 @endsection
 
 @section('js')
 
-    <script>
-        function copyLink() {
-            var copyText = document.getElementById("InvitationLink");
+<script>
+    function copyLink(userType) {
+        // Select the appropriate input field based on userType
+        var inputField = document.getElementById(userType + 'InvitationLink');
 
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
+        // Select the text in the input field
+        inputField.select();
+        inputField.setSelectionRange(0, 99999); // For mobile devices
 
-            document.execCommand("copy");
+        // Copy the text to the clipboard
+        document.execCommand('copy');
 
-            alert("Link copied: " + copyText.value);
-        }
-    </script>
+        // Alert the user that the link has been copied
+        alert('Invitation link for ' + userType + ' copied to clipboard: ' + inputField.value);
+    }
+</script>
+
+
 @endsection

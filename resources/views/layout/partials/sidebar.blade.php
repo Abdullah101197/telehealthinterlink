@@ -42,7 +42,7 @@
                     @endif
                 </a>
             @elseif(auth()->user()->hasRole('HealthCare_Provider'))
-            <a href="{{ route('Health.Care.home', ['name' => Auth::user()->name]) }}">
+            <a href="{{ route('Health.Care.home', ['name' => Auth::user()->p_name]) }}">
                 @if (!isset($settings->logo))
                         <img src="{{ $settings->logo }}" width="180" height="45" alt="Logo">
                     @else
@@ -70,7 +70,7 @@
                     <img src="{{ $settings->favicon }}" width="50" height="50" alt="Logo">
                 </a>
             @elseif(auth()->user()->hasRole('HealthCare_Provider'))
-                <a href="{{ route('Health.Care.home', ['name' => Auth::user()->name]) }}">
+                <a href="{{ route('Health.Care.home', ['name' => Auth::user()->p_name]) }}">
                     <img src="{{ $settings->favicon }}" width="50" height="50" alt="Logo">
                 </a>
             @endif
@@ -107,7 +107,7 @@
             {{-- healthCare provider --}}
             @if (auth()->user()->hasRole('HealthCare_Provider'))
                 <li class="{{ $activePage == 'home' ? 'active' : '' }}">
-                    <a href="{{ route('Health.Care.home', ['name' => Auth::user()->name]) }}">
+                    <a href="{{ route('Health.Care.home', ['name' => Auth::user()->p_name]) }}">
 
                         <i class="fas fe fe-home"></i>
                         <span>{{ __('Dashboard') }}</span>

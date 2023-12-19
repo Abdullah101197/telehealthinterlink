@@ -25,13 +25,12 @@ class healthCareController extends Controller
     // }
     public function index()
     {
-        $healthCareProviders = HealthcareMember::get();
-        foreach ($healthCareProviders as $healthcp) {
-            $healthcp->user = User::find($healthcp->user_id);
-        }
 
+        $users = User::with('roles')->where('id', '!=', 1)->whereHas('roles', function ($query) {
+            $query->whereIn('name', ['HealthCare_Provider']);
+        })->get();
 
-        return view('superAdmin.healthCareProvider.healthCare', compact('healthCareProviders'));
+        return view('superAdmin.admin_user.admin_user', compact('users'));
     }
     function healthCare_home()
     {
@@ -48,22 +47,15 @@ class healthCareController extends Controller
             if ($appointmentsCount > 0) {
                 $totalAppointments[$doctor->id] = $appointmentsCount;
             }
-
-            // $usersCount = User::where('doctor_id', $doctor->id)->doesntHave('roles')->count();
-
-            // if ($usersCount > 0) {
-            //     $totalUsers[$doctor->id] = $usersCount;
-            // }
         }
         $totalAppointment = array_sum($totalAppointments);
         $totalUser = array_sum($totalAppointments);
         $currency = Setting::first()->currency_symbol;
         $id  = auth()->user()->id;
-        // $allUsers = User::where('doctor_id', $doctor->id)->doesntHave('roles')->orderBy('id', 'DESC')->get()->take(10);
-        // $totalUser = User::where('doctor_id', $doctor->id)->doesntHave('roles')->count();
-        // $totalReview = Review::where('doctor_id', $doctor->id)->count();
+        $p_name  = auth()->user()->p_name;
 
-        return view('healthcare.home', compact('totalDoctor', 'totalAppointment', 'totalUser', 'id'));
+
+        return view('healthcare.home', compact('totalDoctor', 'totalAppointment', 'totalUser', 'id', 'p_name'));
     }
 
     function healthCareDoctorSignup(Request $request, $id)
@@ -73,6 +65,14 @@ class healthCareController extends Controller
         $healthcareProviderId = $Hcp_id['id'];
         return view('healthcare.signup', compact('healthcareProviderId'));
     }
+    function healthCarePatientSignup(Request $request, $id)
+    {
+
+        $Hcp_id = HealthcareMember::where('user_id', $id)->first('id')->toArray();
+        $healthcareProviderId = $Hcp_id['id'];
+        return view('healthcare.patient_healthcare_register', compact('healthcareProviderId'));
+    }
+
     public function HealthCareProviderSignUp(Request $request)
     {
 
@@ -82,7 +82,10 @@ class healthCareController extends Controller
             'dob' => 'bail|required',
             'gender' => 'bail|required',
             'phone' => 'bail|required|digits_between:6,12',
-            'password' => 'bail|required|min:6'
+            'password' => 'bail|required|min:6',
+            'p_name' => '|required'
+
+
         ]);
         try {
             $user = (new CustomController)->HealthCareProvider_Register($request->all());
@@ -109,7 +112,8 @@ class healthCareController extends Controller
             $healthMember = HealthcareMember::where('user_id', $user->id)->first();
 
             if ($healthMember != null && $user->status == 1) {
-                $name = $user->name;
+                $name = $user->p_name;
+
                 return redirect()->route('Health.Care.home', ['name' => $name]);
             } else {
                 Auth::logout();

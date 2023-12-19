@@ -434,7 +434,9 @@ class CustomController extends Controller
             'status' => 0,
             'image' => 'defaultUser.png',
             'dob' => $data['dob'],
-            'gender' => $data['gender']
+            'gender' => $data['gender'],
+            'p_name' => $data['p_name'] ?? null,
+
         ]);
         // if ($user) {
         //     $notification_template = NotificationTemplate::where('title', 'register')->first();

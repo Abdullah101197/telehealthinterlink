@@ -17,7 +17,7 @@
             @endif
             @if (auth()->user()->hasRole('HealthCare_Provider'))
                 <div class="breadcrumb-item active">
-                    <a href="{{ url('/health/care/member/' . auth()->user()->name) }}">
+                    <a href="{{ url('/health/care/member/' . auth()->user()->p_name) }}">
                         {{ __('Dashboard') }}
                     </a>
                 </div>
